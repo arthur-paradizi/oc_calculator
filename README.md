@@ -1,21 +1,9 @@
 # GTNH Batch Size Calculator
 
 ## Overview  
-The **GTNH Batch Size Calculator** is a Python script designed to calculate optimal batch sizes and overclocking performance for a GregTech New Horizons (GTNH) industrial setup. It provides insights into item throughput based on specific machine and recipe parameters and visualizes the performance via a graph.
-
-## Features  
-- **Batch Throughput Calculation**: Calculates items processed per second for varying batch sizes.  
-- **Overclocking Analysis**: Considers overclocking constraints and recipe-specific parameters.  
-- **Visualization**: Generates a graph showing performance trends for batch sizes.  
-
+The **GTNH Batch Size Calculator** is a Python script designed to calculate optimal batch sizes and overclocking performance for Gregtech machines, currently it includes extra code to support EBF/Volcanus custom heat calculations as well, it generates a graph that plots items per second processed in relation to batch size of the craft, it also outputs to console what the ideal batch size would be when using batch mode.
 ## How to Use  
-The script is executed as a standalone program. It calculates throughput based on customizable variables and generates a graph displaying the results.  
-
-### Key Script Functions  
-1. `oc_calculator(batch_size)`  
-   - Calculates items per second based on the given batch size and system parameters.  
-2. `oc_graph()`  
-   - Plots a graph showing items per second for batch sizes ranging from 1 to 10.  
+Edit the variables listed below and just run the script
 
 ---
 
@@ -34,17 +22,9 @@ The following global variables in the script need to be adjusted based on your s
 | `COIL_HEAT`         | Heat capacity of the current coil setup (for EBF-specific calculations).                                                                                        | `9901`        |  
 | `RECIPE_HEAT`       | Minimum heat required for the recipe (used for EBF-specific calculations).                                                                                      | `2054`        |  
 
-Modify these variables in the script to match your machine setup, recipe parameters, and environment.  
 
 ---
 
 ## Dependencies  
 The script requires the following Python packages:  
-- `matplotlib`: For plotting the graph.  
-- `math`: For performing mathematical calculations.  
-
-### Installing Dependencies  
-Run the following command to install the necessary packages:  
-```bash
-pip install matplotlib
-
+- `matplotlib`: For plotting the graph. 
