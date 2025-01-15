@@ -1,7 +1,7 @@
 # GTNH Batch Size Calculator
 
 ## Overview  
-The **GTNH Batch Size Calculator** is a Python script designed to calculate optimal batch sizes and overclocking performance for Gregtech machines, currently it includes extra code to support EBF/Volcanus custom heat calculations as well, it generates a graph that plots items per second processed in relation to batch size of the craft, it also outputs to console what the ideal batch size would be when using batch mode.
+The **GTNH Batch Size Calculator** is a Python script designed to calculate optimal batch sizes and overclocking performance for Gregtech machines, currently it includes extra code to support EBF/Volcanus custom heat calculations as well, it generates a graph that plots recipes per second processed in relation to batch size of the craft, it also outputs to console what the ideal batch size would be when using batch mode.
 ## How to Use  
 Edit the variables listed below and just run the script
 

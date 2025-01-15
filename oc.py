@@ -21,19 +21,24 @@ RECIPE_HEAT = 2054
 
 def oc_calculator(batch_size):
     """
-    Calculates the items per second based on the batch size and overclock parameters.
+    Calculates the recipes per second based on the batch size and overclock parameters.
 
     Args:
         batch_size (int): The size of the batch.
 
     Returns:
-        float: Items per second.
+        float: Recipes per second.
     """
     # Initialize variables
     number_of_overclocks = 0
     extra_perfect_ocs = 0
     final_parallels = 0
     perfect_oc = False
+    effective_energy_discount = ENERGY_DISCOUNT
+
+    # Batch size doesn't matter past machine parallels unless you are using batch mode
+    if batch_size > MAX_PARALLELS:
+        batch_size = MAX_PARALLELS
 
     # Calculate machine and recipe tiers
     recipe_tier = max(0, math.ceil(math.log(ENERGY_COST / 32) / math.log(4))) + 1
@@ -41,7 +46,6 @@ def oc_calculator(batch_size):
     maximum_overclocks = machine_tier - recipe_tier
 
     # EBF adjustments
-    effective_energy_discount = ENERGY_DISCOUNT
     if IS_EBF:
         effective_coil_heat = COIL_HEAT + 100 * max(0, machine_tier - 2)
         effective_energy_discount *= 0.95 ** math.floor((effective_coil_heat - RECIPE_HEAT) / 900)
@@ -55,8 +59,9 @@ def oc_calculator(batch_size):
 
     # Calculate energy and recipe time
     real_energy_cost = ENERGY_COST * effective_energy_discount
-    total_eu_per_tick = real_energy_cost * max_parallels	
+    total_eu_per_tick = real_energy_cost * max_parallels
     new_recipe_time = RECIPE_TIME * (100 / (SPEED_BOOST + 100))
+    print(new_recipe_time)
 
     # Check if energy is within machine power limits
     if total_eu_per_tick <= MACHINE_POWER:
@@ -72,6 +77,7 @@ def oc_calculator(batch_size):
 
         # Adjust recipe time based on overclocks
         for _ in range(number_of_overclocks):
+            print(final_recipe_time)
             if perfect_oc or extra_perfect_ocs > 0:
                 final_recipe_time = round(final_recipe_time / 4, 1)
                 extra_perfect_ocs -= 1
@@ -86,24 +92,28 @@ def oc_calculator(batch_size):
         final_recipe_time = new_recipe_time
 
     # Calculate and print the result
-    print(batch_size, final_recipe_time)
-    items_per_second = batch_size/final_recipe_time
-    print(f"Batch size: {batch_size}, Items per second: {items_per_second:.2f}, Optimal Batch Size: {(6.4/final_recipe_time)*MAX_PARALLELS}")
-    return items_per_second
+    recipes_per_second = final_parallels/final_recipe_time
+    print(f"Batch size: {batch_size}, Recipes per second: {recipes_per_second:.2f}")
+    return recipes_per_second
 
 
 def oc_graph():
     """
-    Generates and displays a graph showing items per second for relevant batch sizes.
+    Generates and displays a graph showing recipes per second for relevant batch sizes.
     """
     # Generate data for the graph
-    x_axis = list(range(1, 10))
+    # Remember that batch size means amount of recipes you are running not amount of items you are running
+    x_axis = list(range(1, MAX_PARALLELS+1))
     y_axis = [oc_calculator(batch_size) for batch_size in x_axis]
+    if 1/max(y_axis) * y_axis.index(max(y_axis)) + 1 > 6.4:
+        print(f"Optimal batch size to saturate batch mode: {y_axis.index(max(y_axis)) + 1}")
+    else:
+        print(f"Optimal batch size to saturate batch mode: {math.floor(6.4/(1/max(y_axis)))}")
 
     # Plot the graph
     plt.plot(x_axis, y_axis, marker='o')
     plt.xlabel('Batch Size')
-    plt.ylabel('Items per Second')
+    plt.ylabel('Recipes per Second')
     plt.title('GTNH Batch Size Calculator')
     plt.grid(True)
     plt.show()
